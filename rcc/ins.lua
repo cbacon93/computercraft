@@ -1,13 +1,23 @@
-cbpos = nil
-cbrot = nil
+local cbpos = nil
+local cbrot = nil
+
+function getPos()
+  return cbpos
+end
+
+function getRot()
+  return cbrot
+end
+
 
 function abortError(err)
   if err == "gps" then
     print("Error: no gps found")
   elseif err == "rot" then
     print("Error: could not determine facing location")
+  else
+    print(err)
   end
-
 end
 
 function save()
@@ -50,6 +60,22 @@ function turnRight()
   end
   save()
   return true
+end
+--rotate turtle to target
+function turnTo(target_rot)
+  local rotate_dir = target_rot - cbrot
+  if cbrot == 270 and target_rot == 0 then
+    rotate_dir = 1
+  end
+  if cbrot == 0 and target_rot == 270 then
+    rotate_dir = -1
+  end
+
+  if rotate_dir > 0 then
+    turnRight()
+  else
+    turnLeft()
+  end
 end
 function goForward()
   if not turtle.forward() then
@@ -96,7 +122,7 @@ function gpsLocate()
     return false
   end
 
-  cbpos = vector.new(x, y, z)
+  cbpos = vector.new(round(x), round(y), round(z))
   return true;
 end
 
@@ -111,6 +137,10 @@ function rotLocate()
   if not turtle.forward() then return false end
 
   local x, y, z = gps.locate(5)
+  x = round(x)
+  y = round(y)
+  z = round(z)
+
   if (x > cbpos.x) then cbrot = 0
   elseif (z > cbpos.z) then cbrot = 90
   elseif (x < cbpos.x) then cbrot = 180
@@ -127,18 +157,18 @@ function rotLocate()
 end
 
 function init()
-  if not load() then
-    if not gpsLocate() then
-      abortError("gps")
-      return false
+  if gpsLocate() then
+    if rotLocate() then
+      save()
+      return true
     end
-    if not rotLocate() then
-      abortError("rot")
-      return false
-    end
-    save()
   end
-  return true
+  if load() then
+    return true
+  end
+
+  abortError("Init not successful")
+  return false
 end
 
 function pos()
@@ -147,4 +177,9 @@ end
 
 function rot()
   return cbrot
+end
+
+function round(num, numDecimalPlaces)
+  local mult = 10^(numDecimalPlaces or 0)
+  return math.floor(num * mult + 0.5) / mult
 end
