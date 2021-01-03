@@ -22,7 +22,6 @@ function startup()
   while 1 do
     checkAndRefuel()
     workTasks()
-    os.sleep(2)
   end
 end
 
@@ -31,11 +30,14 @@ function workTasks()
   if tasks[1] ~= nil then
     if execute(tasks[1]) then
       table.remove(tasks, 1)
+      settings.set("cbtasks", tasks)
+      settings.save(".settings")
       resetState()
       print("task finished")
     end
     return
   end
+  os.sleep(1)
 end
 
 --executes a task
