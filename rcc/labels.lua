@@ -361,3 +361,5 @@ turtle_names = {
 "Winds",
 "Zephyrus",
 "Zeus"}
+
+useful_items = {"minecraft:coal", "minecraft:iron_ore", "minecraft:diamond", "minecraft:redstone", "minecraft:cobblestone", "minecraft:crafting_table"}

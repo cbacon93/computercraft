@@ -51,6 +51,7 @@ function excavate3(ins, navigation, pos1, pos2)
         if (state.size.y < 0) then
           return true
         end
+        return false
       end
       ins.turnRight()
       turtle.dig()
@@ -63,6 +64,58 @@ function excavate3(ins, navigation, pos1, pos2)
       ins.goForward()
       ins.turnLeft()
     end
+  end
+
+  save(state)
+  return false
+end
+
+-- digs tunnel
+function tunnel(ins, navigation, pos, dir, length, height, automine)
+  local state = load();
+
+  -- setup
+  if state.state == nil then
+    state.state = 0
+    state.length = length
+    print("tunnel init")
+  end
+
+  -- travel to start pos state
+  if state.state == 0 then
+    print("tunnelmove")
+    if navigation.goTo(ins, pos, pos.y, true) then
+      state.state = 1
+      ins.turnTo(dir)
+    end
+  end
+
+  if state.state == 1 then
+    local turtle_pos = ins.getPos()
+
+    -- if down - go up - mine from top to bottom
+    if turtle_pos.y == pos.y then
+      if state.length <= 0 then
+        return true
+      end
+
+      --go up
+      for i=1,height-1,1 do
+        turtle.digUp()
+        ins.goUp()
+      end
+
+      -- at the top: mine forward
+      turtle.dig()
+      ins.goForward()
+      state.length = state.length -1
+      save()
+      return false
+    end
+
+    --not at the bottom (at the top or somewhere in between)
+    turtle.digDown()
+    ins.goDown()
   end
 
   save(state)
