@@ -21,7 +21,7 @@ function tntDrone(ins, navigation, start, dir, number)
 
   --todo wait for other drones
   if state.state == 1 then
-    state.state == 2
+    state.state = 2
   end
 
   -- move

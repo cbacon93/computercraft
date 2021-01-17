@@ -1,7 +1,7 @@
 
 function goTo(ins, pos, travel_alt, agressive)
   local turtle_pos = ins.getPos()
-  print("p:"..turtle_pos.." t:"..pos)
+  print("p:"..turtle_pos.x..turtle_pos.y..turtle_pos.z.." t:"..pos.x..pos.y..pos.z)
 
   -- we are already there?
   if pos.x == turtle_pos.x and pos.y == turtle_pos.y and pos.z == turtle_pos.z then

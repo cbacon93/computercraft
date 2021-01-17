@@ -12,13 +12,16 @@ local RCC_VERSION = "0.1"
 
 
 function startup()
+  print("Turtle RCC - v"..RCC_VERSION)
+  
   -- init position
-  ins.init()
+  if not ins.init() then
+    print("error... no gps signal")
+  end
   setupLabel()
 
   term.clear()
   term.setCursorPos(1, 1)
-  print("Turtle RCC - v"..RCC_VERSION)
 
   -- main program loop
   local i = 1
